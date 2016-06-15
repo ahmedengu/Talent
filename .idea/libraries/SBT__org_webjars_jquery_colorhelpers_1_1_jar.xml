@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.webjars:jquery-colorhelpers:1.1:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.webjars/jquery-colorhelpers/jars/jquery-colorhelpers-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.webjars/jquery-colorhelpers/srcs/jquery-colorhelpers-1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

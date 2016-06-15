@@ -1,0 +1,18 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+
+GET           /assets/*file                          controllers.Assets.at(path="/public", file)
+GET           /                                      controllers.RESTRouter.indexHome()
+
+#POST          /api/v1/:table/where/*condition        controllers.RESTRouter.indexX(target = "whereWithCondition", table  ,condition)
+POST          /api/v1/login                          controllers.RESTRouter.login()
+
+GET           /api/v1/:table                         controllers.RESTRouter.list(table)
+GET           /api/v1/:table/:id                     controllers.RESTRouter.indexX(target = "getByID", table, id)
+DELETE        /api/v1/:table/:id                     controllers.RESTRouter.indexX(target = "deleteByID", table, id)
+POST          /api/v1/:table                         controllers.RESTRouter.create(table)
+PUT           /api/v1/:table/:id                     controllers.RESTRouter.indexX(target = "updateByID", table , id)
+POST          /api/v1/:table/:id                     controllers.RESTRouter.indexX(target = "updateByID", table , id)
