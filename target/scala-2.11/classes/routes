@@ -5,14 +5,23 @@
 # Home page
 
 GET           /assets/*file                          controllers.Assets.at(path="/public", file)
+#GET           /assets/﻿*file                         controllers.ExternalAssets.at(path="/home/admin/telent/public", file)
+
 GET           /                                      controllers.RESTRouter.indexHome()
 
-#POST          /api/v1/:table/where/*condition        controllers.RESTRouter.indexX(target = "whereWithCondition", table  ,condition)
+POST          /api/v1/:table/where/*condition        controllers.RESTRouter.getWhereWithCondition( table  ,condition)
 POST          /api/v1/login                          controllers.RESTRouter.login()
+GET           /api/v1/logout                         controllers.RESTRouter.logout()
 
-GET           /api/v1/:table                         controllers.RESTRouter.list(table)
-GET           /api/v1/:table/:id                     controllers.RESTRouter.indexX(target = "getByID", table, id)
-DELETE        /api/v1/:table/:id                     controllers.RESTRouter.indexX(target = "deleteByID", table, id)
+GET           /api/v1/user/toprated                  controllers.RESTRouter.topRatedUsers(p="null")
+GET           /api/v1/post/toprated                  controllers.RESTRouter.topRatedPosts(p="null")
+GET           /api/v1/user/toprated/:cat             controllers.RESTRouter.topRatedUsers(cat)
+GET           /api/v1/post/toprated/:cat             controllers.RESTRouter.topRatedPosts(cat)
+
+GET           /api/v1/:table                         controllers.RESTRouter.list(table,p="null")
+GET           /api/v1/:table/p/:page                 controllers.RESTRouter.list(table,page)
+GET           /api/v1/:table/:id                     controllers.RESTRouter.getByID( table, id)
+DELETE        /api/v1/:table/:id                     controllers.RESTRouter.deleteByID( table, id)
 POST          /api/v1/:table                         controllers.RESTRouter.create(table)
-PUT           /api/v1/:table/:id                     controllers.RESTRouter.indexX(target = "updateByID", table , id)
-POST          /api/v1/:table/:id                     controllers.RESTRouter.indexX(target = "updateByID", table , id)
+PUT           /api/v1/:table/:id                     controllers.RESTRouter.updateByID( table , id)
+POST          /api/v1/:table/:id                     controllers.RESTRouter.updateByID( table , id)

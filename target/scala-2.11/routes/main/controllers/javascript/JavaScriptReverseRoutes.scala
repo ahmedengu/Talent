@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmedengu/Documents/IdeaProjects/Talent/conf/routes
-// @DATE:Wed Jun 15 22:03:45 EET 2016
+// @DATE:Sun Jun 19 23:44:41 EET 2016
 
 import play.api.routing.JavaScriptReverseRoute
 import play.api.mvc.{ QueryStringBindable, PathBindable, Call, JavascriptLiteral }
@@ -15,7 +15,7 @@ import _root_.play.libs.F
 package controllers.javascript {
   import ReverseRouteContext.empty
 
-  // @LINE:8
+  // @LINE:10
   class ReverseRESTRouter(_prefix: => String) {
 
     def _defaultPrefix: String = {
@@ -23,7 +23,7 @@ package controllers.javascript {
     }
 
   
-    // @LINE:8
+    // @LINE:10
     def indexHome: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.indexHome",
       """
@@ -33,17 +33,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:13
-    def list: JavaScriptReverseRoute = JavaScriptReverseRoute(
-      "controllers.RESTRouter.list",
-      """
-        function(table0) {
-          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "api/v1/" + (""" + implicitly[PathBindable[String]].javascriptUnbind + """)("table", encodeURIComponent(table0))})
-        }
-      """
-    )
-  
-    // @LINE:17
+    // @LINE:26
     def updateByID: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.updateByID",
       """
@@ -57,7 +47,43 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:10
+    // @LINE:21
+    def list: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.RESTRouter.list",
+      """
+        function(table0,p1) {
+        
+          if (p1 == """ + implicitly[JavascriptLiteral[String]].to("null") + """) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "api/v1/" + (""" + implicitly[PathBindable[String]].javascriptUnbind + """)("table", encodeURIComponent(table0))})
+          }
+        
+          if (true) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "api/v1/" + (""" + implicitly[PathBindable[String]].javascriptUnbind + """)("table", encodeURIComponent(table0)) + "/p/" + (""" + implicitly[PathBindable[String]].javascriptUnbind + """)("page", encodeURIComponent(p1))})
+          }
+        
+        }
+      """
+    )
+  
+    // @LINE:16
+    def topRatedUsers: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.RESTRouter.topRatedUsers",
+      """
+        function(p0) {
+        
+          if (p0 == """ + implicitly[JavascriptLiteral[String]].to("null") + """) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "api/v1/user/toprated"})
+          }
+        
+          if (true) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "api/v1/user/toprated/" + (""" + implicitly[PathBindable[String]].javascriptUnbind + """)("cat", encodeURIComponent(p0))})
+          }
+        
+        }
+      """
+    )
+  
+    // @LINE:12
     def getWhereWithCondition: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.getWhereWithCondition",
       """
@@ -67,7 +93,25 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:14
+    // @LINE:17
+    def topRatedPosts: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.RESTRouter.topRatedPosts",
+      """
+        function(p0) {
+        
+          if (p0 == """ + implicitly[JavascriptLiteral[String]].to("null") + """) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "api/v1/post/toprated"})
+          }
+        
+          if (true) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "api/v1/post/toprated/" + (""" + implicitly[PathBindable[String]].javascriptUnbind + """)("cat", encodeURIComponent(p0))})
+          }
+        
+        }
+      """
+    )
+  
+    // @LINE:23
     def getByID: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.getByID",
       """
@@ -77,7 +121,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:15
+    // @LINE:24
     def deleteByID: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.deleteByID",
       """
@@ -87,7 +131,17 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:16
+    // @LINE:14
+    def logout: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.RESTRouter.logout",
+      """
+        function() {
+          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "api/v1/logout"})
+        }
+      """
+    )
+  
+    // @LINE:25
     def create: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.create",
       """
@@ -97,7 +151,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:11
+    // @LINE:13
     def login: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.login",
       """

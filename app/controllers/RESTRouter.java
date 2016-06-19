@@ -1,19 +1,16 @@
 package controllers;
 
 import models.RESTHelper;
+import models.talentDB.tables.pojos.Post;
+import models.talentDB.tables.pojos.PostTag;
+import models.talentDB.tables.pojos.Tag;
 import models.talentDB.tables.pojos.User;
-import play.data.DynamicForm;
+import play.Play;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-
-import models.talentDB.*;
-import models.talentDB.tables.*;
-import models.talentDB.tables.daos.*;
-import models.talentDB.tables.pojos.*;
-import models.talentDB.tables.records.*;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
@@ -28,7 +25,37 @@ public class RESTRouter extends Controller {
     @Inject
     FormFactory formFactory;
 
-    public  Result indexHome() {
+    public  Result topRatedUsers(String cat) {
+        try {
+            return ok(Json.toJson(restHelper.getTopRatedUsers(cat)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return badRequest("{\"error\":\"bad request\"}");
+    }
+
+    public  Result topRatedPosts(String cat) {
+
+        try {
+            return ok(Json.toJson(restHelper.getTopRatedPosts(cat)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return badRequest("{\"error\":\"bad request\"}");
+    }
+
+    public Result logout() {
+        String id = session("id");
+        if (id == null) return badRequest("{\"error\":\"bad request\"}");
+
+        session().clear();
+
+        return ok("{\"logout\":\"" + id + "\"}");
+
+    }
+
+    public Result indexHome() {
+
         return play.mvc.Results.TODO;
     }
 
@@ -38,14 +65,16 @@ public class RESTRouter extends Controller {
         String email = data.get("email");
         String password = data.get("password");
         try {
-            User login = restHelper.login(email, password);
-            return ok(Json.toJson(login));
-        } catch (SQLException e) {
+            User user = restHelper.login(email, password);
+            session("id", user.getUserId().toString());
+            session("email", user.getEmail().toString());
+
+            return ok(Json.toJson(user));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return badRequest("{\"error\":\"bad request\"}");
-
 
 
     }
@@ -66,16 +95,17 @@ public class RESTRouter extends Controller {
     }
 
 
-
-
-
-    public play.mvc.Result list(String tableName) {
+    public play.mvc.Result list(String tableName, String page) {
 
         List result = null;
         try {
-            result = restHelper.getAll(tableName);
+
+            if (page.equals("null"))
+                result = restHelper.getAll(tableName, null);
+            else if(page.length()>0)
+                result = restHelper.getAll(tableName, page);
             return ok(Json.toJson(result));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return badRequest("{\"error\":\"bad request\"}");
@@ -84,11 +114,14 @@ public class RESTRouter extends Controller {
 
     public play.mvc.Result getByID(String tableName, String id) {
 
+        String id1 = session("id");
         List result = null;
         try {
+            if (!session("id").equals(id))
+                return badRequest("{\"error\":\"bad request\"}");
             result = restHelper.getByID(tableName, id);
-            return ok(Json.toJson(result));
-        } catch (SQLException e) {
+            return ok(Json.toJson(result.get(0)));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return badRequest("{\"error\":\"bad request\"}");
@@ -101,14 +134,22 @@ public class RESTRouter extends Controller {
         List result = null;
         try {
             result = restHelper.deleteByID(tableName, id);
-            return ok(Json.toJson(result));
-        } catch (SQLException e) {
+
+
+            if (tableName.toLowerCase().equals("post")) {
+                restHelper.deletePostTag("post_tag", id);
+            }
+
+
+            return ok("{\"affected rows\":" + Json.toJson(result.get(0)) + "}");
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return badRequest("{\"error\":\"bad request\"}");
     }
 
     public play.mvc.Result create(String tableName) {
+
         Class aClass = RESTHelper.getClassByName(tableName);
         Form form = formFactory.form(aClass).bindFromRequest();
 
@@ -116,11 +157,50 @@ public class RESTRouter extends Controller {
             return badRequest("{\"error\":" + form.errorsAsJson() + "}");
         } else {
             try {
+
+                if (!form.data().getOrDefault("userId", "").equals("") && !session("id").equals(form.data().get("userId")) || !form.data().getOrDefault("follower", "").equals("") && !session("id").equals(form.data().get("follower")))
+                    return badRequest("{\"error\":\"bad request\"}");
+
+
                 List result = restHelper.create(tableName, form);
-                if (result.size() > 0) {
-                    return created(Json.toJson(result));
+
+                if (tableName.toLowerCase().equals("post")) {
+                    Map<String, String> data = formFactory.form().bindFromRequest().data();
+
+                    if (!data.getOrDefault("tags", "").equals("")) {
+                        String[] tags = data.get("tags").toString().split(",");
+                        List<Integer> tagsIDs = new ArrayList<>();
+                        for (int i = 0; i < tags.length; i++) {
+                            List<Tag> where = restHelper.getWhere("tag", "Name", tags[i]);
+                            if (where.size() > 0) {
+                                tagsIDs.add(where.get(0).getTagId());
+                            } else {
+                                Form<Tag> ff = formFactory.form(Tag.class);
+                                Tag tag = new Tag();
+                                tag.setName(tags[i]);
+                                ff = ff.fill(tag);
+                                List<Tag> list = restHelper.create("Tag", ff);
+                                tagsIDs.add(list.get(0).getTagId());
+                            }
+                        }
+                        Integer postId = ((Post) result.get(0)).getPostId();
+                        for (int i = 0; i < tagsIDs.size(); i++) {
+                            Form<PostTag> ff = formFactory.form(PostTag.class);
+                            PostTag postTag = new PostTag();
+                            postTag.setPostId(postId);
+                            postTag.setTagId(tagsIDs.get(i));
+
+                            ff = ff.fill(postTag);
+                            restHelper.create("post_tag", ff);
+                        }
+
+                    }
                 }
-            } catch (SQLException e) {
+
+                if (result.size() > 0) {
+                    return created(Json.toJson(result.get(0)));
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -133,11 +213,56 @@ public class RESTRouter extends Controller {
         try {
             Class aClass = RESTHelper.getClassByName(tableName);
 //            Form form = formFactory.form(aClass).bindFromRequest();
+            Form f = formFactory.form(aClass).bindFromRequest();
 
-            Form form = formFactory.form().bindFromRequest();
+            if (f.hasErrors())
+                return badRequest("{\"error\":" + f.errorsAsJson() + "}");
+
+            Object form = formFactory.form(aClass).bindFromRequest().get();
+            if (tableName.toLowerCase().equals("user") && !session("id").equals(id))
+                return badRequest("{\"error\":\"bad request\"}");
+
             result = restHelper.updateByID(tableName, form, id);
-            return ok(Json.toJson(result));
-        } catch (SQLException e) {
+
+            if (tableName.toLowerCase().equals("post")) {
+                Map<String, String> data = formFactory.form().bindFromRequest().data();
+
+                if (!data.getOrDefault("tags", "").equals("")) {
+                    Integer postId = Integer.valueOf(id);
+
+
+                    restHelper.deletePostTag("post_tag", String.valueOf(id));
+
+                    String[] tags = data.get("tags").toString().split(",");
+                    List<Integer> tagsIDs = new ArrayList<>();
+                    for (int i = 0; i < tags.length; i++) {
+                        List<Tag> where = restHelper.getWhere("tag", "Name", tags[i]);
+                        if (where.size() > 0) {
+                            tagsIDs.add(where.get(0).getTagId());
+                        } else {
+                            Form<Tag> ff = formFactory.form(Tag.class);
+                            Tag tag = new Tag();
+                            tag.setName(tags[i]);
+                            ff = ff.fill(tag);
+                            List<Tag> list = restHelper.create("Tag", ff);
+                            tagsIDs.add(list.get(0).getTagId());
+                        }
+                    }
+                    for (int i = 0; i < tagsIDs.size(); i++) {
+                        Form<PostTag> ff = formFactory.form(PostTag.class);
+                        PostTag postTag = new PostTag();
+                        postTag.setPostId(postId);
+                        postTag.setTagId(tagsIDs.get(i));
+
+                        ff = ff.fill(postTag);
+                        restHelper.create("post_tag", ff);
+                    }
+
+                }
+            }
+
+            return ok(Json.toJson(result.get(0)));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return badRequest("{\"error\":\"bad request\"}");

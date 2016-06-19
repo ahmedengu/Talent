@@ -14,7 +14,9 @@ import java.sql.SQLException;
 public class PlayConnectionProvider implements ConnectionProvider {
     Connection conn;
 
-    @Inject Database db;
+    @Inject
+    Database db;
+
     public Connection acquire() throws DataAccessException {
         try {
 

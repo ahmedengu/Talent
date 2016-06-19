@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: com.google.api.client:google-api-client-http:1.2.3-alpha:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.api.client/google-api-client-http/jars/google-api-client-http-1.2.3-alpha.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.api.client/google-api-client-http/srcs/google-api-client-http-1.2.3-alpha-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
