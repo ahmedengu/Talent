@@ -5,7 +5,9 @@ import models.talentDB.tables.pojos.Post;
 import models.talentDB.tables.pojos.PostTag;
 import models.talentDB.tables.pojos.Tag;
 import models.talentDB.tables.pojos.User;
-import play.Play;
+import org.jooq.Field;
+import org.jooq.Table;
+import org.jooq.UpdatableRecord;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -25,7 +27,7 @@ public class RESTRouter extends Controller {
     @Inject
     FormFactory formFactory;
 
-    public  Result topRatedUsers(String cat) {
+    public Result topRatedUsers(String cat) {
         try {
             return ok(Json.toJson(restHelper.getTopRatedUsers(cat)));
         } catch (SQLException e) {
@@ -34,7 +36,7 @@ public class RESTRouter extends Controller {
         return badRequest("{\"error\":\"bad request\"}");
     }
 
-    public  Result topRatedPosts(String cat) {
+    public Result topRatedPosts(String cat) {
 
         try {
             return ok(Json.toJson(restHelper.getTopRatedPosts(cat)));
@@ -102,7 +104,7 @@ public class RESTRouter extends Controller {
 
             if (page.equals("null"))
                 result = restHelper.getAll(tableName, null);
-            else if(page.length()>0)
+            else if (page.length() > 0)
                 result = restHelper.getAll(tableName, page);
             return ok(Json.toJson(result));
         } catch (Exception e) {
@@ -117,9 +119,27 @@ public class RESTRouter extends Controller {
         String id1 = session("id");
         List result = null;
         try {
-            if (!session("id").equals(id))
-                return badRequest("{\"error\":\"bad request\"}");
-            result = restHelper.getByID(tableName, id);
+//            if (!session("id").equals(id))
+//                return badRequest("{\"error\":\"bad request\"}");
+
+            if (tableName.toLowerCase().equals("user")) {
+                Field[] selectFields;
+                String id2 = session("id");
+                if (session("id") != null && id2.equals(id))
+                    selectFields = restHelper.getSelectFieldsByName(tableName);
+                else
+                    selectFields = restHelper.getSelectFieldsByName("USERGETALL");
+
+                Table table = restHelper.getTableByName(tableName);
+                Class tableClass = restHelper.getClassByName(tableName);
+                UpdatableRecord record = restHelper.getRecordByName(tableName);
+
+
+                result = restHelper.getByID(table, selectFields, tableClass, record, id);
+
+            } else
+                result = restHelper.getByID(tableName, id);
+
             return ok(Json.toJson(result.get(0)));
         } catch (Exception e) {
             e.printStackTrace();
