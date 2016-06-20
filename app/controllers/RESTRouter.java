@@ -40,6 +40,13 @@ public class RESTRouter extends Controller {
     RESTHelper restHelper;
     @Inject
     FormFactory formFactory;
+
+    public  Result getUpdatedPosts(String id) {
+
+        List userFollowersPosts = restHelper.getUserFollowersPosts(id);
+        return ok(Json.toJson(userFollowersPosts));
+
+    }
 //    @Inject
 //    WSClient ws;
 

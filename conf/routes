@@ -14,6 +14,7 @@ GET           /                                      controllers.RESTRouter.inde
 POST          /api/v1/:table/where/*condition        controllers.RESTRouter.getWhereWithCondition( table  ,condition)
 POST          /api/v1/login                          controllers.RESTRouter.login()
 GET           /api/v1/logout                         controllers.RESTRouter.logout()
+GET           /api/v1/post/update/:id                  controllers.RESTRouter.getUpdatedPosts(id)
 
 GET           /api/v1/user/toprated                  controllers.RESTRouter.topRatedUsers(p="null")
 GET           /api/v1/post/toprated                  controllers.RESTRouter.topRatedPosts(p="null")

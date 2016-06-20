@@ -291,9 +291,9 @@ public class RESTHelper {
 
             Http.MultipartFormData<File> body = request().body().asMultipartFormData();
             Http.MultipartFormData.FilePart<File> video = body.getFile("video");
-            if (video != null && video.getContentType().contains("video")) {
+            if (video != null &&( video.getContentType().contains("video")||video.getFilename().contains(".mp4"))) {
 
-                String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + video.getContentType().substring(video.getContentType().indexOf("/") + 1);
+                String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + video.getFilename().substring(video.getFilename().lastIndexOf(".") + 1);
                 File file = video.getFile();
                 boolean b = file.renameTo(new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/videos/" + newFile));
                 if (b) {
@@ -619,6 +619,6 @@ public class RESTHelper {
 
     public List getUserFollowersPosts(String s) {
 
-        return getDslContext().select(Tables.POST.fields()).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).fetchMaps();
+        return getDslContext().select(Tables.POST.fields()).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).orderBy(Tables.POST.DATE.desc()).fetchMaps();
     }
 }
