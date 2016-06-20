@@ -1,6 +1,7 @@
 package controllers;
 
 import models.RESTHelper;
+import models.talentDB.Tables;
 import models.talentDB.tables.pojos.Post;
 import models.talentDB.tables.pojos.PostTag;
 import models.talentDB.tables.pojos.Tag;
@@ -26,6 +27,13 @@ public class RESTRouter extends Controller {
     RESTHelper restHelper;
     @Inject
     FormFactory formFactory;
+
+    public  Result u() {
+        restHelper.youtubeUpload("C:\\Users\\ahmedengu\\Documents\\IdeaProjects\\Talent\\sample-video.mp4", "user video", "", new ArrayList<String>() {{
+            add("sport");
+        }});
+        return ok();
+    }
 
     public Result topRatedUsers(String cat) {
         try {
