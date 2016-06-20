@@ -612,4 +612,13 @@ public class RESTHelper {
     }
 
 
+    public List getUserFollowers(String s) {
+
+        return getDslContext().select().from(Tables.FOLLOWER).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).fetchMaps();
+    }
+
+    public List getUserFollowersPosts(String s) {
+
+        return getDslContext().select(Tables.POST.fields()).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).fetchMaps();
+    }
 }

@@ -153,8 +153,17 @@ public class RESTRouter extends Controller {
             User user = restHelper.login(email, password);
             session("id", user.getUserId().toString());
             session("email", user.getEmail().toString());
+            List list = new ArrayList();
+            list.add(user);
 
-            return ok(Json.toJson(user));
+            List userFollowers=    restHelper.getUserFollowers(user.getUserId().toString());
+            list.add(userFollowers);
+            List posts = restHelper.getWhere("post", "User_ID", user.getUserId().toString());
+            list.add(posts);
+
+            List userFollowersPosts = restHelper.getUserFollowersPosts(user.getUserId().toString());
+            list.add(userFollowersPosts);
+            return ok(Json.toJson(list));
 //            return setRefreshToken();
         } catch (Exception e) {
             e.printStackTrace();
