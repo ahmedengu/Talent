@@ -8,6 +8,8 @@ GET           /assets/*file                          controllers.Assets.at(path=
 #GET           /assets/﻿*file                         controllers.ExternalAssets.at(path="/home/admin/telent/public", file)
 
 GET           /                                      controllers.RESTRouter.indexHome()
+#GET           /getRefreshToken                                      controllers.RESTRouter.getRefreshToken()
+#GET           /setRefreshToken                                      controllers.RESTRouter.setRefreshToken()
 
 POST          /api/v1/:table/where/*condition        controllers.RESTRouter.getWhereWithCondition( table  ,condition)
 POST          /api/v1/login                          controllers.RESTRouter.login()

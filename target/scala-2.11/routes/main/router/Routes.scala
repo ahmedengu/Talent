@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmedengu/Documents/IdeaProjects/Talent/conf/routes
-// @DATE:Sun Jun 19 23:44:41 EET 2016
+// @DATE:Mon Jun 20 07:53:22 EET 2016
 
 package router
 
@@ -100,7 +100,7 @@ class Routes(
     )
   )
 
-  // @LINE:12
+  // @LINE:14
   private[this] lazy val controllers_RESTRouter_getWhereWithCondition2_route = Route("POST",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/where/"), DynamicPart("condition", """.+""",false)))
   )
@@ -117,7 +117,7 @@ class Routes(
     )
   )
 
-  // @LINE:13
+  // @LINE:15
   private[this] lazy val controllers_RESTRouter_login3_route = Route("POST",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/login")))
   )
@@ -134,7 +134,7 @@ class Routes(
     )
   )
 
-  // @LINE:14
+  // @LINE:16
   private[this] lazy val controllers_RESTRouter_logout4_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/logout")))
   )
@@ -151,7 +151,7 @@ class Routes(
     )
   )
 
-  // @LINE:16
+  // @LINE:18
   private[this] lazy val controllers_RESTRouter_topRatedUsers5_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/user/toprated")))
   )
@@ -168,7 +168,7 @@ class Routes(
     )
   )
 
-  // @LINE:17
+  // @LINE:19
   private[this] lazy val controllers_RESTRouter_topRatedPosts6_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/post/toprated")))
   )
@@ -185,7 +185,7 @@ class Routes(
     )
   )
 
-  // @LINE:18
+  // @LINE:20
   private[this] lazy val controllers_RESTRouter_topRatedUsers7_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/user/toprated/"), DynamicPart("cat", """[^/]+""",true)))
   )
@@ -202,7 +202,7 @@ class Routes(
     )
   )
 
-  // @LINE:19
+  // @LINE:21
   private[this] lazy val controllers_RESTRouter_topRatedPosts8_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/post/toprated/"), DynamicPart("cat", """[^/]+""",true)))
   )
@@ -219,7 +219,7 @@ class Routes(
     )
   )
 
-  // @LINE:21
+  // @LINE:23
   private[this] lazy val controllers_RESTRouter_list9_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true)))
   )
@@ -236,7 +236,7 @@ class Routes(
     )
   )
 
-  // @LINE:22
+  // @LINE:24
   private[this] lazy val controllers_RESTRouter_list10_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/p/"), DynamicPart("page", """[^/]+""",true)))
   )
@@ -253,7 +253,7 @@ class Routes(
     )
   )
 
-  // @LINE:23
+  // @LINE:25
   private[this] lazy val controllers_RESTRouter_getByID11_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/"), DynamicPart("id", """[^/]+""",true)))
   )
@@ -270,7 +270,7 @@ class Routes(
     )
   )
 
-  // @LINE:24
+  // @LINE:26
   private[this] lazy val controllers_RESTRouter_deleteByID12_route = Route("DELETE",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/"), DynamicPart("id", """[^/]+""",true)))
   )
@@ -287,7 +287,7 @@ class Routes(
     )
   )
 
-  // @LINE:25
+  // @LINE:27
   private[this] lazy val controllers_RESTRouter_create13_route = Route("POST",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true)))
   )
@@ -304,7 +304,7 @@ class Routes(
     )
   )
 
-  // @LINE:26
+  // @LINE:28
   private[this] lazy val controllers_RESTRouter_updateByID14_route = Route("PUT",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/"), DynamicPart("id", """[^/]+""",true)))
   )
@@ -321,7 +321,7 @@ class Routes(
     )
   )
 
-  // @LINE:27
+  // @LINE:29
   private[this] lazy val controllers_RESTRouter_updateByID15_route = Route("POST",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/"), DynamicPart("id", """[^/]+""",true)))
   )
@@ -353,85 +353,85 @@ class Routes(
         controllers_RESTRouter_indexHome1_invoker.call(RESTRouter_1.indexHome())
       }
   
-    // @LINE:12
+    // @LINE:14
     case controllers_RESTRouter_getWhereWithCondition2_route(params) =>
       call(params.fromPath[String]("table", None), params.fromPath[String]("condition", None)) { (table, condition) =>
         controllers_RESTRouter_getWhereWithCondition2_invoker.call(RESTRouter_1.getWhereWithCondition(table, condition))
       }
   
-    // @LINE:13
+    // @LINE:15
     case controllers_RESTRouter_login3_route(params) =>
       call { 
         controllers_RESTRouter_login3_invoker.call(RESTRouter_1.login())
       }
   
-    // @LINE:14
+    // @LINE:16
     case controllers_RESTRouter_logout4_route(params) =>
       call { 
         controllers_RESTRouter_logout4_invoker.call(RESTRouter_1.logout())
       }
   
-    // @LINE:16
+    // @LINE:18
     case controllers_RESTRouter_topRatedUsers5_route(params) =>
       call(Param[String]("p", Right("null"))) { (p) =>
         controllers_RESTRouter_topRatedUsers5_invoker.call(RESTRouter_1.topRatedUsers(p))
       }
   
-    // @LINE:17
+    // @LINE:19
     case controllers_RESTRouter_topRatedPosts6_route(params) =>
       call(Param[String]("p", Right("null"))) { (p) =>
         controllers_RESTRouter_topRatedPosts6_invoker.call(RESTRouter_1.topRatedPosts(p))
       }
   
-    // @LINE:18
+    // @LINE:20
     case controllers_RESTRouter_topRatedUsers7_route(params) =>
       call(params.fromPath[String]("cat", None)) { (cat) =>
         controllers_RESTRouter_topRatedUsers7_invoker.call(RESTRouter_1.topRatedUsers(cat))
       }
   
-    // @LINE:19
+    // @LINE:21
     case controllers_RESTRouter_topRatedPosts8_route(params) =>
       call(params.fromPath[String]("cat", None)) { (cat) =>
         controllers_RESTRouter_topRatedPosts8_invoker.call(RESTRouter_1.topRatedPosts(cat))
       }
   
-    // @LINE:21
+    // @LINE:23
     case controllers_RESTRouter_list9_route(params) =>
       call(params.fromPath[String]("table", None), Param[String]("p", Right("null"))) { (table, p) =>
         controllers_RESTRouter_list9_invoker.call(RESTRouter_1.list(table, p))
       }
   
-    // @LINE:22
+    // @LINE:24
     case controllers_RESTRouter_list10_route(params) =>
       call(params.fromPath[String]("table", None), params.fromPath[String]("page", None)) { (table, page) =>
         controllers_RESTRouter_list10_invoker.call(RESTRouter_1.list(table, page))
       }
   
-    // @LINE:23
+    // @LINE:25
     case controllers_RESTRouter_getByID11_route(params) =>
       call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
         controllers_RESTRouter_getByID11_invoker.call(RESTRouter_1.getByID(table, id))
       }
   
-    // @LINE:24
+    // @LINE:26
     case controllers_RESTRouter_deleteByID12_route(params) =>
       call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
         controllers_RESTRouter_deleteByID12_invoker.call(RESTRouter_1.deleteByID(table, id))
       }
   
-    // @LINE:25
+    // @LINE:27
     case controllers_RESTRouter_create13_route(params) =>
       call(params.fromPath[String]("table", None)) { (table) =>
         controllers_RESTRouter_create13_invoker.call(RESTRouter_1.create(table))
       }
   
-    // @LINE:26
+    // @LINE:28
     case controllers_RESTRouter_updateByID14_route(params) =>
       call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
         controllers_RESTRouter_updateByID14_invoker.call(RESTRouter_1.updateByID(table, id))
       }
   
-    // @LINE:27
+    // @LINE:29
     case controllers_RESTRouter_updateByID15_route(params) =>
       call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
         controllers_RESTRouter_updateByID15_invoker.call(RESTRouter_1.updateByID(table, id))

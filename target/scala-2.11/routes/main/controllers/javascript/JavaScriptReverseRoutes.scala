@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmedengu/Documents/IdeaProjects/Talent/conf/routes
-// @DATE:Sun Jun 19 23:44:41 EET 2016
+// @DATE:Mon Jun 20 07:53:22 EET 2016
 
 import play.api.routing.JavaScriptReverseRoute
 import play.api.mvc.{ QueryStringBindable, PathBindable, Call, JavascriptLiteral }
@@ -33,7 +33,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:26
+    // @LINE:28
     def updateByID: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.updateByID",
       """
@@ -47,7 +47,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:21
+    // @LINE:23
     def list: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.list",
       """
@@ -65,7 +65,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:16
+    // @LINE:18
     def topRatedUsers: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.topRatedUsers",
       """
@@ -83,7 +83,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:12
+    // @LINE:14
     def getWhereWithCondition: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.getWhereWithCondition",
       """
@@ -93,7 +93,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:17
+    // @LINE:19
     def topRatedPosts: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.topRatedPosts",
       """
@@ -111,7 +111,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:23
+    // @LINE:25
     def getByID: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.getByID",
       """
@@ -121,7 +121,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:24
+    // @LINE:26
     def deleteByID: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.deleteByID",
       """
@@ -131,7 +131,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:14
+    // @LINE:16
     def logout: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.logout",
       """
@@ -141,7 +141,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:25
+    // @LINE:27
     def create: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.create",
       """
@@ -151,7 +151,7 @@ package controllers.javascript {
       """
     )
   
-    // @LINE:13
+    // @LINE:15
     def login: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RESTRouter.login",
       """

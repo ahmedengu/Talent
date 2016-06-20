@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmedengu/Documents/IdeaProjects/Talent/conf/routes
-// @DATE:Sun Jun 19 23:44:41 EET 2016
+// @DATE:Mon Jun 20 07:53:22 EET 2016
 
 package controllers;
 
