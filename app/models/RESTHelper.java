@@ -276,8 +276,8 @@ public class RESTHelper {
 
                     File newF = new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/pics/" + newFile);
                     newF.setReadable(true, false);
-                    newF.setExecutable(true, false);
-                    newF.setWritable(true, false);
+//                    newF.setExecutable(true, false);
+//                    newF.setWritable(true, false);
 
                 } else return new ArrayList() {{
                     add(new HashMap<String, String>() {{
@@ -300,8 +300,8 @@ public class RESTHelper {
 
                     File newF = new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/videos/" + newFile);
                     newF.setReadable(true, false);
-                    newF.setExecutable(true, false);
-                    newF.setWritable(true, false);
+//                    newF.setExecutable(true, false);
+//                    newF.setWritable(true, false);
 //                    // This OAuth 2.0 access scope allows an application to upload files
 //                    // to the authenticated user's YouTube channel, but doesn't allow
 //                    // other types of access.

@@ -67,6 +67,7 @@ public class RESTRouter extends Controller {
         String email = data.get("email");
         String password = data.get("password");
         try {
+            session().clear();
             User user = restHelper.login(email, password);
             session("id", user.getUserId().toString());
             session("email", user.getEmail().toString());
