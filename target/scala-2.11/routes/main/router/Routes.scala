@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmedengu/Documents/IdeaProjects/Talent/conf/routes
-// @DATE:Mon Jun 20 07:53:22 EET 2016
+// @DATE:Tue Jun 21 23:35:10 EET 2016
 
 package router
 
@@ -47,7 +47,10 @@ class Routes(
     ("""GET""", this.prefix, """controllers.RESTRouter.indexHome()"""),
     ("""POST""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/""" + "$" + """table<[^/]+>/where/""" + "$" + """condition<.+>""", """controllers.RESTRouter.getWhereWithCondition(table:String, condition:String)"""),
     ("""POST""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/login""", """controllers.RESTRouter.login()"""),
+    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/login""", """controllers.RESTRouter.login()"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/logout""", """controllers.RESTRouter.logout()"""),
+    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/post/update/""" + "$" + """id<[^/]+>""", """controllers.RESTRouter.getUpdatedPosts(id:String)"""),
+    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/follower/update/""" + "$" + """id<[^/]+>""", """controllers.RESTRouter.getFollowing(id:String)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/user/toprated""", """controllers.RESTRouter.topRatedUsers(p:String = "null")"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/post/toprated""", """controllers.RESTRouter.topRatedPosts(p:String = "null")"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """api/v1/user/toprated/""" + "$" + """cat<[^/]+>""", """controllers.RESTRouter.topRatedUsers(cat:String)"""),
@@ -135,10 +138,27 @@ class Routes(
   )
 
   // @LINE:16
-  private[this] lazy val controllers_RESTRouter_logout4_route = Route("GET",
+  private[this] lazy val controllers_RESTRouter_login4_route = Route("GET",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/login")))
+  )
+  private[this] lazy val controllers_RESTRouter_login4_invoker = createInvoker(
+    RESTRouter_1.login(),
+    HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.RESTRouter",
+      "login",
+      Nil,
+      "GET",
+      """""",
+      this.prefix + """api/v1/login"""
+    )
+  )
+
+  // @LINE:18
+  private[this] lazy val controllers_RESTRouter_logout5_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/logout")))
   )
-  private[this] lazy val controllers_RESTRouter_logout4_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_logout5_invoker = createInvoker(
     RESTRouter_1.logout(),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -151,11 +171,45 @@ class Routes(
     )
   )
 
-  // @LINE:18
-  private[this] lazy val controllers_RESTRouter_topRatedUsers5_route = Route("GET",
+  // @LINE:19
+  private[this] lazy val controllers_RESTRouter_getUpdatedPosts6_route = Route("GET",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/post/update/"), DynamicPart("id", """[^/]+""",true)))
+  )
+  private[this] lazy val controllers_RESTRouter_getUpdatedPosts6_invoker = createInvoker(
+    RESTRouter_1.getUpdatedPosts(fakeValue[String]),
+    HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.RESTRouter",
+      "getUpdatedPosts",
+      Seq(classOf[String]),
+      "GET",
+      """""",
+      this.prefix + """api/v1/post/update/""" + "$" + """id<[^/]+>"""
+    )
+  )
+
+  // @LINE:20
+  private[this] lazy val controllers_RESTRouter_getFollowing7_route = Route("GET",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/follower/update/"), DynamicPart("id", """[^/]+""",true)))
+  )
+  private[this] lazy val controllers_RESTRouter_getFollowing7_invoker = createInvoker(
+    RESTRouter_1.getFollowing(fakeValue[String]),
+    HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.RESTRouter",
+      "getFollowing",
+      Seq(classOf[String]),
+      "GET",
+      """""",
+      this.prefix + """api/v1/follower/update/""" + "$" + """id<[^/]+>"""
+    )
+  )
+
+  // @LINE:22
+  private[this] lazy val controllers_RESTRouter_topRatedUsers8_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/user/toprated")))
   )
-  private[this] lazy val controllers_RESTRouter_topRatedUsers5_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_topRatedUsers8_invoker = createInvoker(
     RESTRouter_1.topRatedUsers(fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -168,11 +222,11 @@ class Routes(
     )
   )
 
-  // @LINE:19
-  private[this] lazy val controllers_RESTRouter_topRatedPosts6_route = Route("GET",
+  // @LINE:23
+  private[this] lazy val controllers_RESTRouter_topRatedPosts9_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/post/toprated")))
   )
-  private[this] lazy val controllers_RESTRouter_topRatedPosts6_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_topRatedPosts9_invoker = createInvoker(
     RESTRouter_1.topRatedPosts(fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -185,11 +239,11 @@ class Routes(
     )
   )
 
-  // @LINE:20
-  private[this] lazy val controllers_RESTRouter_topRatedUsers7_route = Route("GET",
+  // @LINE:24
+  private[this] lazy val controllers_RESTRouter_topRatedUsers10_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/user/toprated/"), DynamicPart("cat", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_topRatedUsers7_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_topRatedUsers10_invoker = createInvoker(
     RESTRouter_1.topRatedUsers(fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -202,11 +256,11 @@ class Routes(
     )
   )
 
-  // @LINE:21
-  private[this] lazy val controllers_RESTRouter_topRatedPosts8_route = Route("GET",
+  // @LINE:25
+  private[this] lazy val controllers_RESTRouter_topRatedPosts11_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/post/toprated/"), DynamicPart("cat", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_topRatedPosts8_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_topRatedPosts11_invoker = createInvoker(
     RESTRouter_1.topRatedPosts(fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -219,11 +273,11 @@ class Routes(
     )
   )
 
-  // @LINE:23
-  private[this] lazy val controllers_RESTRouter_list9_route = Route("GET",
+  // @LINE:27
+  private[this] lazy val controllers_RESTRouter_list12_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_list9_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_list12_invoker = createInvoker(
     RESTRouter_1.list(fakeValue[String], fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -236,11 +290,11 @@ class Routes(
     )
   )
 
-  // @LINE:24
-  private[this] lazy val controllers_RESTRouter_list10_route = Route("GET",
+  // @LINE:28
+  private[this] lazy val controllers_RESTRouter_list13_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/p/"), DynamicPart("page", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_list10_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_list13_invoker = createInvoker(
     RESTRouter_1.list(fakeValue[String], fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -253,11 +307,11 @@ class Routes(
     )
   )
 
-  // @LINE:25
-  private[this] lazy val controllers_RESTRouter_getByID11_route = Route("GET",
+  // @LINE:29
+  private[this] lazy val controllers_RESTRouter_getByID14_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/"), DynamicPart("id", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_getByID11_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_getByID14_invoker = createInvoker(
     RESTRouter_1.getByID(fakeValue[String], fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -270,11 +324,11 @@ class Routes(
     )
   )
 
-  // @LINE:26
-  private[this] lazy val controllers_RESTRouter_deleteByID12_route = Route("DELETE",
+  // @LINE:30
+  private[this] lazy val controllers_RESTRouter_deleteByID15_route = Route("DELETE",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/"), DynamicPart("id", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_deleteByID12_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_deleteByID15_invoker = createInvoker(
     RESTRouter_1.deleteByID(fakeValue[String], fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -287,11 +341,11 @@ class Routes(
     )
   )
 
-  // @LINE:27
-  private[this] lazy val controllers_RESTRouter_create13_route = Route("POST",
+  // @LINE:31
+  private[this] lazy val controllers_RESTRouter_create16_route = Route("POST",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_create13_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_create16_invoker = createInvoker(
     RESTRouter_1.create(fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -304,11 +358,11 @@ class Routes(
     )
   )
 
-  // @LINE:28
-  private[this] lazy val controllers_RESTRouter_updateByID14_route = Route("PUT",
+  // @LINE:32
+  private[this] lazy val controllers_RESTRouter_updateByID17_route = Route("PUT",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/"), DynamicPart("id", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_updateByID14_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_updateByID17_invoker = createInvoker(
     RESTRouter_1.updateByID(fakeValue[String], fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -321,11 +375,11 @@ class Routes(
     )
   )
 
-  // @LINE:29
-  private[this] lazy val controllers_RESTRouter_updateByID15_route = Route("POST",
+  // @LINE:33
+  private[this] lazy val controllers_RESTRouter_updateByID18_route = Route("POST",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("api/v1/"), DynamicPart("table", """[^/]+""",true), StaticPart("/"), DynamicPart("id", """[^/]+""",true)))
   )
-  private[this] lazy val controllers_RESTRouter_updateByID15_invoker = createInvoker(
+  private[this] lazy val controllers_RESTRouter_updateByID18_invoker = createInvoker(
     RESTRouter_1.updateByID(fakeValue[String], fakeValue[String]),
     HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -366,75 +420,93 @@ class Routes(
       }
   
     // @LINE:16
-    case controllers_RESTRouter_logout4_route(params) =>
+    case controllers_RESTRouter_login4_route(params) =>
       call { 
-        controllers_RESTRouter_logout4_invoker.call(RESTRouter_1.logout())
+        controllers_RESTRouter_login4_invoker.call(RESTRouter_1.login())
       }
   
     // @LINE:18
-    case controllers_RESTRouter_topRatedUsers5_route(params) =>
-      call(Param[String]("p", Right("null"))) { (p) =>
-        controllers_RESTRouter_topRatedUsers5_invoker.call(RESTRouter_1.topRatedUsers(p))
+    case controllers_RESTRouter_logout5_route(params) =>
+      call { 
+        controllers_RESTRouter_logout5_invoker.call(RESTRouter_1.logout())
       }
   
     // @LINE:19
-    case controllers_RESTRouter_topRatedPosts6_route(params) =>
-      call(Param[String]("p", Right("null"))) { (p) =>
-        controllers_RESTRouter_topRatedPosts6_invoker.call(RESTRouter_1.topRatedPosts(p))
+    case controllers_RESTRouter_getUpdatedPosts6_route(params) =>
+      call(params.fromPath[String]("id", None)) { (id) =>
+        controllers_RESTRouter_getUpdatedPosts6_invoker.call(RESTRouter_1.getUpdatedPosts(id))
       }
   
     // @LINE:20
-    case controllers_RESTRouter_topRatedUsers7_route(params) =>
-      call(params.fromPath[String]("cat", None)) { (cat) =>
-        controllers_RESTRouter_topRatedUsers7_invoker.call(RESTRouter_1.topRatedUsers(cat))
+    case controllers_RESTRouter_getFollowing7_route(params) =>
+      call(params.fromPath[String]("id", None)) { (id) =>
+        controllers_RESTRouter_getFollowing7_invoker.call(RESTRouter_1.getFollowing(id))
       }
   
-    // @LINE:21
-    case controllers_RESTRouter_topRatedPosts8_route(params) =>
-      call(params.fromPath[String]("cat", None)) { (cat) =>
-        controllers_RESTRouter_topRatedPosts8_invoker.call(RESTRouter_1.topRatedPosts(cat))
+    // @LINE:22
+    case controllers_RESTRouter_topRatedUsers8_route(params) =>
+      call(Param[String]("p", Right("null"))) { (p) =>
+        controllers_RESTRouter_topRatedUsers8_invoker.call(RESTRouter_1.topRatedUsers(p))
       }
   
     // @LINE:23
-    case controllers_RESTRouter_list9_route(params) =>
-      call(params.fromPath[String]("table", None), Param[String]("p", Right("null"))) { (table, p) =>
-        controllers_RESTRouter_list9_invoker.call(RESTRouter_1.list(table, p))
+    case controllers_RESTRouter_topRatedPosts9_route(params) =>
+      call(Param[String]("p", Right("null"))) { (p) =>
+        controllers_RESTRouter_topRatedPosts9_invoker.call(RESTRouter_1.topRatedPosts(p))
       }
   
     // @LINE:24
-    case controllers_RESTRouter_list10_route(params) =>
-      call(params.fromPath[String]("table", None), params.fromPath[String]("page", None)) { (table, page) =>
-        controllers_RESTRouter_list10_invoker.call(RESTRouter_1.list(table, page))
+    case controllers_RESTRouter_topRatedUsers10_route(params) =>
+      call(params.fromPath[String]("cat", None)) { (cat) =>
+        controllers_RESTRouter_topRatedUsers10_invoker.call(RESTRouter_1.topRatedUsers(cat))
       }
   
     // @LINE:25
-    case controllers_RESTRouter_getByID11_route(params) =>
-      call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
-        controllers_RESTRouter_getByID11_invoker.call(RESTRouter_1.getByID(table, id))
-      }
-  
-    // @LINE:26
-    case controllers_RESTRouter_deleteByID12_route(params) =>
-      call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
-        controllers_RESTRouter_deleteByID12_invoker.call(RESTRouter_1.deleteByID(table, id))
+    case controllers_RESTRouter_topRatedPosts11_route(params) =>
+      call(params.fromPath[String]("cat", None)) { (cat) =>
+        controllers_RESTRouter_topRatedPosts11_invoker.call(RESTRouter_1.topRatedPosts(cat))
       }
   
     // @LINE:27
-    case controllers_RESTRouter_create13_route(params) =>
-      call(params.fromPath[String]("table", None)) { (table) =>
-        controllers_RESTRouter_create13_invoker.call(RESTRouter_1.create(table))
+    case controllers_RESTRouter_list12_route(params) =>
+      call(params.fromPath[String]("table", None), Param[String]("p", Right("null"))) { (table, p) =>
+        controllers_RESTRouter_list12_invoker.call(RESTRouter_1.list(table, p))
       }
   
     // @LINE:28
-    case controllers_RESTRouter_updateByID14_route(params) =>
-      call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
-        controllers_RESTRouter_updateByID14_invoker.call(RESTRouter_1.updateByID(table, id))
+    case controllers_RESTRouter_list13_route(params) =>
+      call(params.fromPath[String]("table", None), params.fromPath[String]("page", None)) { (table, page) =>
+        controllers_RESTRouter_list13_invoker.call(RESTRouter_1.list(table, page))
       }
   
     // @LINE:29
-    case controllers_RESTRouter_updateByID15_route(params) =>
+    case controllers_RESTRouter_getByID14_route(params) =>
       call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
-        controllers_RESTRouter_updateByID15_invoker.call(RESTRouter_1.updateByID(table, id))
+        controllers_RESTRouter_getByID14_invoker.call(RESTRouter_1.getByID(table, id))
+      }
+  
+    // @LINE:30
+    case controllers_RESTRouter_deleteByID15_route(params) =>
+      call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
+        controllers_RESTRouter_deleteByID15_invoker.call(RESTRouter_1.deleteByID(table, id))
+      }
+  
+    // @LINE:31
+    case controllers_RESTRouter_create16_route(params) =>
+      call(params.fromPath[String]("table", None)) { (table) =>
+        controllers_RESTRouter_create16_invoker.call(RESTRouter_1.create(table))
+      }
+  
+    // @LINE:32
+    case controllers_RESTRouter_updateByID17_route(params) =>
+      call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
+        controllers_RESTRouter_updateByID17_invoker.call(RESTRouter_1.updateByID(table, id))
+      }
+  
+    // @LINE:33
+    case controllers_RESTRouter_updateByID18_route(params) =>
+      call(params.fromPath[String]("table", None), params.fromPath[String]("id", None)) { (table, id) =>
+        controllers_RESTRouter_updateByID18_invoker.call(RESTRouter_1.updateByID(table, id))
       }
   }
 }

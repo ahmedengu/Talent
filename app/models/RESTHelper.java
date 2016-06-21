@@ -619,6 +619,21 @@ public class RESTHelper {
 
     public List getUserFollowersPosts(String s) {
 
+
+
+        List<Field<?>> fields = new ArrayList();
+        fields.addAll(Arrays.asList(Tables.POST.fields()));
+        fields.add(Tables.RATE.RATE_ID);
+
+        fields.add(Tables.RATE.RATING);
+        fields.add(Tables.LIKE.LIKE_ID);
+        Field<?>[] f = new Field[fields.size()];
+        for (int i = 0; i < fields.size(); i++) {
+            f[i] = fields.get(i);
+        }
+
+//        return getDslContext().select(f).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).join(Tables.LIKE).on(Tables.LIKE.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.RATE).on(Tables.RATE.USER_ID.equal(Tables.POST.USER_ID)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).orderBy(Tables.POST.DATE.desc()).fetchMaps();
+
         return getDslContext().select(Tables.POST.fields()).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).orderBy(Tables.POST.DATE.desc()).fetchMaps();
     }
 }

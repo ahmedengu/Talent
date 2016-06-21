@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmedengu/Documents/IdeaProjects/Talent/conf/routes
-// @DATE:Mon Jun 20 07:53:22 EET 2016
+// @DATE:Tue Jun 21 23:35:10 EET 2016
 
 import play.api.mvc.{ QueryStringBindable, PathBindable, Call, JavascriptLiteral }
 import play.core.routing.{ HandlerDef, ReverseRouteContext, queryString, dynamicString }
@@ -26,12 +26,12 @@ package controllers {
       Call("GET", _prefix)
     }
   
-    // @LINE:28
+    // @LINE:32
     def updateByID(table:String, id:String): Call = {
     
       (table: @unchecked, id: @unchecked) match {
       
-        // @LINE:28
+        // @LINE:32
         case (table, id)  =>
           import ReverseRouteContext.empty
           Call("PUT", _prefix + { _defaultPrefix } + "api/v1/" + implicitly[PathBindable[String]].unbind("table", dynamicString(table)) + "/" + implicitly[PathBindable[String]].unbind("id", dynamicString(id)))
@@ -40,17 +40,17 @@ package controllers {
     
     }
   
-    // @LINE:23
+    // @LINE:27
     def list(table:String, p:String): Call = {
     
       (table: @unchecked, p: @unchecked) match {
       
-        // @LINE:23
+        // @LINE:27
         case (table, p) if p == "null" =>
           implicit val _rrc = new ReverseRouteContext(Map(("p", "null")))
           Call("GET", _prefix + { _defaultPrefix } + "api/v1/" + implicitly[PathBindable[String]].unbind("table", dynamicString(table)))
       
-        // @LINE:24
+        // @LINE:28
         case (table, p)  =>
           import ReverseRouteContext.empty
           Call("GET", _prefix + { _defaultPrefix } + "api/v1/" + implicitly[PathBindable[String]].unbind("table", dynamicString(table)) + "/p/" + implicitly[PathBindable[String]].unbind("page", dynamicString(p)))
@@ -59,17 +59,17 @@ package controllers {
     
     }
   
-    // @LINE:18
+    // @LINE:22
     def topRatedUsers(p:String): Call = {
     
       (p: @unchecked) match {
       
-        // @LINE:18
+        // @LINE:22
         case (p) if p == "null" =>
           implicit val _rrc = new ReverseRouteContext(Map(("p", "null")))
           Call("GET", _prefix + { _defaultPrefix } + "api/v1/user/toprated")
       
-        // @LINE:20
+        // @LINE:24
         case (p)  =>
           import ReverseRouteContext.empty
           Call("GET", _prefix + { _defaultPrefix } + "api/v1/user/toprated/" + implicitly[PathBindable[String]].unbind("cat", dynamicString(p)))
@@ -84,17 +84,17 @@ package controllers {
       Call("POST", _prefix + { _defaultPrefix } + "api/v1/" + implicitly[PathBindable[String]].unbind("table", dynamicString(table)) + "/where/" + implicitly[PathBindable[String]].unbind("condition", condition))
     }
   
-    // @LINE:19
+    // @LINE:23
     def topRatedPosts(p:String): Call = {
     
       (p: @unchecked) match {
       
-        // @LINE:19
+        // @LINE:23
         case (p) if p == "null" =>
           implicit val _rrc = new ReverseRouteContext(Map(("p", "null")))
           Call("GET", _prefix + { _defaultPrefix } + "api/v1/post/toprated")
       
-        // @LINE:21
+        // @LINE:25
         case (p)  =>
           import ReverseRouteContext.empty
           Call("GET", _prefix + { _defaultPrefix } + "api/v1/post/toprated/" + implicitly[PathBindable[String]].unbind("cat", dynamicString(p)))
@@ -103,34 +103,54 @@ package controllers {
     
     }
   
-    // @LINE:25
+    // @LINE:29
     def getByID(table:String, id:String): Call = {
       import ReverseRouteContext.empty
       Call("GET", _prefix + { _defaultPrefix } + "api/v1/" + implicitly[PathBindable[String]].unbind("table", dynamicString(table)) + "/" + implicitly[PathBindable[String]].unbind("id", dynamicString(id)))
     }
   
-    // @LINE:26
+    // @LINE:30
     def deleteByID(table:String, id:String): Call = {
       import ReverseRouteContext.empty
       Call("DELETE", _prefix + { _defaultPrefix } + "api/v1/" + implicitly[PathBindable[String]].unbind("table", dynamicString(table)) + "/" + implicitly[PathBindable[String]].unbind("id", dynamicString(id)))
     }
   
-    // @LINE:16
+    // @LINE:18
     def logout(): Call = {
       import ReverseRouteContext.empty
       Call("GET", _prefix + { _defaultPrefix } + "api/v1/logout")
     }
   
-    // @LINE:27
+    // @LINE:31
     def create(table:String): Call = {
       import ReverseRouteContext.empty
       Call("POST", _prefix + { _defaultPrefix } + "api/v1/" + implicitly[PathBindable[String]].unbind("table", dynamicString(table)))
     }
   
+    // @LINE:19
+    def getUpdatedPosts(id:String): Call = {
+      import ReverseRouteContext.empty
+      Call("GET", _prefix + { _defaultPrefix } + "api/v1/post/update/" + implicitly[PathBindable[String]].unbind("id", dynamicString(id)))
+    }
+  
+    // @LINE:20
+    def getFollowing(id:String): Call = {
+      import ReverseRouteContext.empty
+      Call("GET", _prefix + { _defaultPrefix } + "api/v1/follower/update/" + implicitly[PathBindable[String]].unbind("id", dynamicString(id)))
+    }
+  
     // @LINE:15
     def login(): Call = {
-      import ReverseRouteContext.empty
-      Call("POST", _prefix + { _defaultPrefix } + "api/v1/login")
+    
+      () match {
+      
+        // @LINE:15
+        case ()  =>
+          import ReverseRouteContext.empty
+          Call("POST", _prefix + { _defaultPrefix } + "api/v1/login")
+      
+      }
+    
     }
   
   }

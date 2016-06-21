@@ -41,6 +41,11 @@ public class RESTRouter extends Controller {
     @Inject
     FormFactory formFactory;
 
+    public  Result getFollowing(String id) {
+        List userFollowers = restHelper.getUserFollowers(id);
+        return ok(Json.toJson(userFollowers));
+    }
+
     public  Result getUpdatedPosts(String id) {
 
         List userFollowersPosts = restHelper.getUserFollowersPosts(id);
