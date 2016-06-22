@@ -154,7 +154,16 @@ public class RESTHelper {
     }
 
     public List getAll(Table table, Field[] selectFields, Class tableClass) throws SQLException {
-        return getDslContext().select(selectFields).from(table).fetch().into(tableClass);
+
+        SelectJoinStep<Record> from = getDslContext().select(selectFields).from(table);
+        for (int i = 0; i < selectFields.length; i++) {
+            if (selectFields[i].getName().toLowerCase().contains("dato")) {
+                from.orderBy(selectFields[i].desc());
+                break;
+            }
+        }
+
+        return from.fetch().into(tableClass);
     }
 
     public List getAll(Table table, Field[] selectFields, Class tableClass, String page) throws SQLException {
@@ -163,11 +172,24 @@ public class RESTHelper {
 //            return list.subList(Integer.parseInt(page) * 10, (Integer.parseInt(page) + 1) * 10);
 //        else
 //            return list.subList(Integer.parseInt(page) * 10, list.size());
-        if (page == null)
-            return getDslContext().select(selectFields).from(table).fetch().into(tableClass);
-        else {
-            int i = Integer.parseInt(page) == 0 ? 0 : Integer.parseInt(page) * 10;
-            return getDslContext().select(selectFields).from(table).orderBy(selectFields[0]).seek(i).limit(10).fetch().into(tableClass);
+        if (page == null) {
+            SelectJoinStep<Record> from = getDslContext().select(selectFields).from(table);
+            for (int i = 0; i < selectFields.length; i++) {
+                if (selectFields[i].getName().toLowerCase().contains("dato")) {
+                    from.orderBy(selectFields[i].desc());
+                    break;
+                }
+            }
+            return from.fetch().into(tableClass);
+        } else {
+            int j = Integer.parseInt(page) == 0 ? 0 : Integer.parseInt(page) * 10;
+            SelectJoinStep<Record> from = getDslContext().select(selectFields).from(table);
+            for (int i = 0; i < selectFields.length; i++) {
+                if (selectFields[i].getName().toLowerCase().contains("dato")) {
+                    return from.orderBy(selectFields[i].desc()).seek(j).limit(10).fetch().into(tableClass);
+                }
+            }
+            return from.orderBy(selectFields[0].desc()).seek(j).limit(10).fetch().into(tableClass);
         }
     }
 
@@ -291,7 +313,7 @@ public class RESTHelper {
 
             Http.MultipartFormData<File> body = request().body().asMultipartFormData();
             Http.MultipartFormData.FilePart<File> video = body.getFile("video");
-            if (video != null &&( video.getContentType().contains("video")||video.getFilename().contains(".mp4"))) {
+            if (video != null && (video.getContentType().contains("video") || video.getFilename().contains(".mp4"))) {
 
                 String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + video.getFilename().substring(video.getFilename().lastIndexOf(".") + 1);
                 File file = video.getFile();
@@ -531,11 +553,11 @@ public class RESTHelper {
                     case "OROR":
                         ki = lm.get(i).getKey().replaceAll("%", "");
                         kj = lm.get(j).getKey().replaceAll("%", "");
-                        String kii = lm.get(j+1).getKey().replaceAll("%", "");
-                        String kjj = lm.get(j+2).getKey().replaceAll("%", "");
-                        from.where(table.field(ki).equal(lm.get(i).getValue())).or(table.field(kj).equal(lm.get(j).getValue())).or(table.field(kjj).equal(lm.get(j+2).getValue())).or(table.field(kii).equal(lm.get(j+1).getValue()));
-                        i=j+1;
-                        j+=2;
+                        String kii = lm.get(j + 1).getKey().replaceAll("%", "");
+                        String kjj = lm.get(j + 2).getKey().replaceAll("%", "");
+                        from.where(table.field(ki).equal(lm.get(i).getValue())).or(table.field(kj).equal(lm.get(j).getValue())).or(table.field(kjj).equal(lm.get(j + 2).getValue())).or(table.field(kii).equal(lm.get(j + 1).getValue()));
+                        i = j + 1;
+                        j += 2;
                         break;
                     case "ORNOT":
                         ki = lm.get(i).getKey().replaceAll("%", "");
@@ -620,13 +642,16 @@ public class RESTHelper {
     public List getUserFollowersPosts(String s) {
 
 
-
         List<Field<?>> fields = new ArrayList();
         fields.addAll(Arrays.asList(Tables.POST.fields()));
-        fields.add(Tables.RATE.RATE_ID);
 
-        fields.add(Tables.RATE.RATING);
-        fields.add(Tables.LIKE.LIKE_ID);
+
+        fields.add(Tables.COMMENT.TEXT);
+        fields.add(Tables.USER.USER_ID.as("postUserID"));
+        fields.add(Tables.USER.USERNAME.as("postUserUsername"));
+        fields.add(Tables.USER.PROFILE_PICTURE.as("postUserProfilePic"));
+
+
         Field<?>[] f = new Field[fields.size()];
         for (int i = 0; i < fields.size(); i++) {
             f[i] = fields.get(i);
@@ -634,6 +659,7 @@ public class RESTHelper {
 
 //        return getDslContext().select(f).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).join(Tables.LIKE).on(Tables.LIKE.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.RATE).on(Tables.RATE.USER_ID.equal(Tables.POST.USER_ID)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).orderBy(Tables.POST.DATE.desc()).fetchMaps();
 
-        return getDslContext().select(Tables.POST.fields()).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).orderBy(Tables.POST.DATE.desc()).fetchMaps();
+        SelectSeekStep1<Record, Timestamp> records = getDslContext().select(f).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).leftOuterJoin(Tables.COMMENT).on(Tables.COMMENT.POST_ID.equal(Tables.POST.POST_ID)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).orderBy(Tables.POST.DATE.desc());
+        return records.fetchMaps();
     }
 }
