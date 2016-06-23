@@ -163,18 +163,28 @@ public class RESTRouter extends Controller {
         try {
             session().clear();
             User user = restHelper.login(email, password);
-            session("id", user.getUserId().toString());
+            String id = user.getUserId().toString();
+            session("id", id);
             session("email", user.getEmail().toString());
             List list = new ArrayList();
             list.add(user);
 
-            List userFollowers=    restHelper.getUserFollowers(user.getUserId().toString());
+            List userFollowers=    restHelper.getUserFollowers(id);
             list.add(userFollowers);
-            List posts = restHelper.getWhere("post", "User_ID", user.getUserId().toString());
+            List posts = restHelper.getWhere("post", "User_ID", id);
             list.add(posts);
 
-            List userFollowersPosts = restHelper.getUserFollowersPosts(user.getUserId().toString());
+            List userFollowersPosts = restHelper.getUserFollowersPosts(id);
             list.add(userFollowersPosts);
+            List userFollowersComments = restHelper.getUserFollowersComments(id);
+            list.add(userFollowersComments);
+            List likesOfUser = restHelper.getWhere("Like", "User_ID", id);
+            list.add(likesOfUser);
+            List ratesOfUser = restHelper.getWhere("Rate", "User_ID", id);
+            list.add(ratesOfUser);
+            List commentsOfUser = restHelper.getWhere("comment", "User_ID", id);
+            list.add(commentsOfUser);
+
             return ok(Json.toJson(list));
 //            return setRefreshToken();
         } catch (Exception e) {

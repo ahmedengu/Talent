@@ -662,4 +662,24 @@ public class RESTHelper {
         SelectSeekStep1<Record, Timestamp> records = getDslContext().select(f).from(Tables.POST).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.POST.USER_ID)).join(Tables.FOLLOWER).on(Tables.USER.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).leftOuterJoin(Tables.COMMENT).on(Tables.COMMENT.POST_ID.equal(Tables.POST.POST_ID)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).and(Tables.POST.USER_ID.equal(Tables.USER.USER_ID)).orderBy(Tables.POST.DATE.desc());
         return records.fetchMaps();
     }
+
+
+    public List getUserFollowersComments(String s) {
+
+
+        List<Field<?>> fields = new ArrayList();
+        fields.addAll(Arrays.asList(Tables.COMMENT.fields()));
+        fields.add(Tables.USER.USERNAME);
+        fields.add(Tables.USER.PROFILE_PICTURE);
+
+
+        Field<?>[] f = new Field[fields.size()];
+        for (int i = 0; i < fields.size(); i++) {
+            f[i] = fields.get(i);
+        }
+
+
+        SelectSeekStep1<Record, Timestamp> records = getDslContext().select(f).from(Tables.COMMENT).join(Tables.POST).on(Tables.POST.POST_ID.equal(Tables.COMMENT.POST_ID)).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.COMMENT.USER_ID)).join(Tables.FOLLOWER).on(Tables.POST.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).orderBy(Tables.POST.DATE.desc());
+        return records.fetchMaps();
+    }
 }
