@@ -276,51 +276,114 @@ public class RESTHelper {
         return create(table, selectFields, tableClass, form);
     }
 
+//    public List create(Table table, Field[] selectFields, Class tableClass, Object form) throws SQLException {
+//        UpdatableRecord record = (UpdatableRecord) getDslContext().newRecord(table);
+//
+//        record.from(((Form) form).get());
+////        record.set(table.field("ID"), null);
+//        if (table.equals(Tables.USER)) {
+////            record.set(table.field("studentEmailActivationCode"), UUID.randomUUID().toString().replace("-", "").substring(0, 9));
+//            String password = BCrypt.hashpw((String) record.get("Password"), BCrypt.gensalt());
+//
+//            record.set(table.field("Password"), password);
+//
+//            Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+//            Http.MultipartFormData.FilePart<File> pic = body.getFile("pic");
+//            if (pic != null && pic.getContentType().contains("image")) {
+//
+//                String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + pic.getContentType().substring(pic.getContentType().indexOf("/") + 1);
+//                File file = pic.getFile();
+//                boolean b = file.renameTo(new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/pics/" + newFile));
+//                if (b) {
+//                    record.set(Tables.USER.PROFILE_PICTURE, "/localstorage/pics/" + newFile);
+//
+//                    File newF = new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/pics/" + newFile);
+//                    newF.setReadable(true, false);
+////                    newF.setExecutable(true, false);
+////                    newF.setWritable(true, false);
+//
+//                } else return new ArrayList() {{
+//                    add(new HashMap<String, String>() {{
+//                        put("file", "not uploaded");
+//                    }});
+//                }};
+//            }
+//
+//        } else if (table.equals(Tables.POST)) {
+//
+//            Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+//            Http.MultipartFormData.FilePart<File> video = body.getFile("video");
+//            if (video != null && (video.getContentType().contains("video") || video.getFilename().contains(".mp4"))) {
+//
+//                String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + video.getFilename().substring(video.getFilename().lastIndexOf(".") + 1);
+//                File file = video.getFile();
+//                boolean b = file.renameTo(new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/videos/" + newFile));
+//                if (b) {
+//                    record.set(Tables.POST.POSTURL, "/localstorage/videos/" + newFile);
+//
+//                    File newF = new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/videos/" + newFile);
+//                    newF.setReadable(true, false);
+////                    newF.setExecutable(true, false);
+////                    newF.setWritable(true, false);
+////                    String videoID = youtubeUpload(newF.getAbsolutePath(), "user #" + record.get(Tables.POST.USER_ID).toString() + "video", "", new ArrayList<String>() {{
+////                        add("sport");
+////                    }});
+////                    if (videoID != null)
+////                        record.set(Tables.POST.POSTURL, "https://www.youtube.com/watch?v=" + videoID);
+//
+//
+//                } else return new ArrayList() {{
+//                    add(new HashMap<String, String>() {{
+//                        put("file", "not uploaded");
+//                    }});
+//                }};
+//            }
+//        }
+//
+//        Field<Timestamp> date = (Field<Timestamp>) record.field("Date");
+//        if (date != null)
+//            record.set(date, new Timestamp(System.currentTimeMillis()));
+//
+//        record.store();
+//
+//        List list = new ArrayList<>();
+//        list.add(record.into(tableClass));
+//
+//        return list;
+//    }
+
+
     public List create(Table table, Field[] selectFields, Class tableClass, Object form) throws SQLException {
         UpdatableRecord record = (UpdatableRecord) getDslContext().newRecord(table);
-
         record.from(((Form) form).get());
 //        record.set(table.field("ID"), null);
         if (table.equals(Tables.USER)) {
 //            record.set(table.field("studentEmailActivationCode"), UUID.randomUUID().toString().replace("-", "").substring(0, 9));
             String password = BCrypt.hashpw((String) record.get("Password"), BCrypt.gensalt());
-
             record.set(table.field("Password"), password);
-
-            Http.MultipartFormData<File> body = request().body().asMultipartFormData();
-            Http.MultipartFormData.FilePart<File> pic = body.getFile("pic");
-            if (pic != null && pic.getContentType().contains("image")) {
-
-                String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + pic.getContentType().substring(pic.getContentType().indexOf("/") + 1);
-                File file = pic.getFile();
-                boolean b = file.renameTo(new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/pics/" + newFile));
-                if (b) {
-                    record.set(Tables.USER.PROFILE_PICTURE, "/localstorage/pics/" + newFile);
-
-                    File newF = new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/pics/" + newFile);
-                    newF.setReadable(true, false);
-//                    newF.setExecutable(true, false);
-//                    newF.setWritable(true, false);
-
-                } else return new ArrayList() {{
-                    add(new HashMap<String, String>() {{
-                        put("file", "not uploaded");
-                    }});
-                }};
+            if (record.field("pic") != null) {
+                Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+                if (body.getFile("pic") != null && body.getFile("pic").getContentType().contains("image")) {
+                    Http.MultipartFormData.FilePart<File> pic = body.getFile("pic");
+                    String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + pic.getContentType().substring(pic.getContentType().indexOf("/") + 1);
+                    boolean b = pic.getFile().renameTo(new File("C:\\Users\\ahmedengu\\Documents\\" +
+                            "IdeaProjects\\Talent\\public\\pics\\" + newFile));
+                    if (b)
+                        record.set(Tables.USER.PROFILE_PICTURE, "/assets/pics/" + newFile);
+                    else return new ArrayList() {{
+                        add("\"file\":\"not upladed\" ");
+                    }};
+                }
             }
-
         } else if (table.equals(Tables.POST)) {
-
             Http.MultipartFormData<File> body = request().body().asMultipartFormData();
             Http.MultipartFormData.FilePart<File> video = body.getFile("video");
             if (video != null && (video.getContentType().contains("video") || video.getFilename().contains(".mp4"))) {
-
                 String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + video.getFilename().substring(video.getFilename().lastIndexOf(".") + 1);
                 File file = video.getFile();
                 boolean b = file.renameTo(new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/videos/" + newFile));
                 if (b) {
                     record.set(Tables.POST.POSTURL, "/localstorage/videos/" + newFile);
-
                     File newF = new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/videos/" + newFile);
                     newF.setReadable(true, false);
 //                    newF.setExecutable(true, false);
@@ -330,8 +393,6 @@ public class RESTHelper {
 //                    }});
 //                    if (videoID != null)
 //                        record.set(Tables.POST.POSTURL, "https://www.youtube.com/watch?v=" + videoID);
-
-
                 } else return new ArrayList() {{
                     add(new HashMap<String, String>() {{
                         put("file", "not uploaded");
@@ -339,16 +400,12 @@ public class RESTHelper {
                 }};
             }
         }
-
         Field<Timestamp> date = (Field<Timestamp>) record.field("Date");
         if (date != null)
             record.set(date, new Timestamp(System.currentTimeMillis()));
-
         record.store();
-
         List list = new ArrayList<>();
         list.add(record.into(tableClass));
-
         return list;
     }
 
