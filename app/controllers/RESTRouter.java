@@ -290,6 +290,7 @@ public class RESTRouter extends Controller {
 
     public play.mvc.Result create(String tableName) {
 
+
         Class aClass = RESTHelper.getClassByName(tableName);
         Form form = formFactory.form(aClass).bindFromRequest();
 
@@ -298,8 +299,8 @@ public class RESTRouter extends Controller {
         } else {
             try {
 
-                if (!form.data().getOrDefault("userId", "").equals("") && !session("id").equals(form.data().get("userId")) || !form.data().getOrDefault("follower", "").equals("") && !session("id").equals(form.data().get("follower")))
-                    return badRequest("{\"error\":\"bad request\"}");
+//                if (!form.data().getOrDefault("userId", "").equals("") && !session("id").equals(form.data().get("userId")) || !form.data().getOrDefault("follower", "").equals("") && !session("id").equals(form.data().get("follower")))
+//                    return badRequest("{\"error\":\"bad request\"}");
 
 
                 List result = restHelper.create(tableName, form);

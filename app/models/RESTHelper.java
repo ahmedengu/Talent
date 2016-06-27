@@ -17,8 +17,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
-import static org.jooq.impl.DSL.count;
-import static org.jooq.impl.DSL.sum;
+import static org.jooq.impl.DSL.*;
 import static play.mvc.Controller.request;
 import static play.mvc.Controller.session;
 
@@ -288,7 +287,8 @@ public class RESTHelper {
             record.set(table.field("Password"), password);
 
             Http.MultipartFormData<File> body = request().body().asMultipartFormData();
-            Http.MultipartFormData.FilePart<File> pic = body.getFile("pic");
+
+            Http.MultipartFormData.FilePart<File> pic = (body==null)?null:(body.getFile("pic"));
             if (pic != null && pic.getContentType().contains("image")) {
 
                 String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + pic.getContentType().substring(pic.getContentType().indexOf("/") + 1);
@@ -313,7 +313,7 @@ public class RESTHelper {
 
             Http.MultipartFormData<File> body = request().body().asMultipartFormData();
             Http.MultipartFormData.FilePart<File> video = body.getFile("video");
-            if (video != null && (video.getContentType().contains("video") || video.getFilename().contains(".mp4"))) {
+            if (video != null && (video.getContentType().contains("video") ||(video.getContentType().contains("octet-stream")|| video.getFilename().contains(".mp4")|| video.getFilename().contains(".jpg")))) {
 
                 String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + video.getFilename().substring(video.getFilename().lastIndexOf(".") + 1);
                 File file = video.getFile();
@@ -345,7 +345,9 @@ public class RESTHelper {
             record.set(date, new Timestamp(System.currentTimeMillis()));
 
         record.store();
-
+        if(table.equals(Tables.RATE)){
+            updatePostRating((Integer) record.get(Tables.RATE.POST_ID));
+        }
         List list = new ArrayList<>();
         list.add(record.into(tableClass));
 
@@ -510,7 +512,9 @@ public class RESTHelper {
         record.from((form));
 //        record.set(table.field("ID"), id);
         record.update();
-
+        if(table.equals(Tables.RATE)){
+            updatePostRating((Integer) record.get(Tables.RATE.POST_ID));
+        }
         List list = new ArrayList<>();
         list.add(record.into(tableClass));
 
@@ -684,5 +688,10 @@ public class RESTHelper {
 
         SelectSeekStep1<Record, Timestamp> records = getDslContext().select(f).from(Tables.COMMENT).join(Tables.POST).on(Tables.POST.POST_ID.equal(Tables.COMMENT.POST_ID)).join(Tables.USER).on(Tables.USER.USER_ID.equal(Tables.COMMENT.USER_ID)).join(Tables.FOLLOWER).on(Tables.POST.USER_ID.equal(Tables.FOLLOWER.FOLLOWED)).where(Tables.FOLLOWER.FOLLOWER_.equal(Integer.valueOf(s))).orderBy(Tables.POST.DATE.desc());
         return records.fetchMaps();
+    }
+
+    public void updatePostRating(int id){
+      double   rating =( (BigDecimal) getDslContext().select(sum(Tables.RATE.RATING).div(count())).from(Tables.RATE).where(Tables.RATE.POST_ID.equal(id)).fetchOne(0)).doubleValue();
+        getDslContext().update(Tables.POST).set(Tables.POST.RATINGCOUNT, selectCount().from(Tables.RATE).where(Tables.RATE.POST_ID.equal(id))).set(Tables.POST.TOTAL_RATING,rating ).where(Tables.POST.POST_ID.equal(id)).execute();
     }
 }
