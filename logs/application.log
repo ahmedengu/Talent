@@ -6,3 +6,4 @@
 2016-06-27 05:40:36,743 [WARN] from application in ForkJoinPool-1-worker-1 - application.langs is deprecated, use play.i18n.langs instead
 2016-06-27 05:40:37,604 [INFO] from play.api.Play in ForkJoinPool-1-worker-1 - Application started (Dev)
 2016-06-27 05:40:54,728 [WARN] from application in application-akka.actor.default-dispatcher-9 - application.conf @ file:/C:/Users/ahmedengu/Documents/IdeaProjects/Talent/target/scala-2.11/classes/application.conf: 8: application.secret is deprecated, use play.crypto.secret instead
+2016-06-27 06:00:35,953 [INFO] from application in pool-4-thread-4 - Shutting down connection pool.
