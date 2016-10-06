@@ -1,5 +1,16 @@
 package models;
 
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.googleapis.media.MediaHttpUploader;
+import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
+import com.google.api.client.http.InputStreamContent;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoSnippet;
+import com.google.api.services.youtube.model.VideoStatus;
+import com.google.common.collect.Lists;
+import controllers.Auth;
 import models.talentDB.Tables;
 import models.talentDB.tables.pojos.*;
 import models.talentDB.tables.records.*;
@@ -12,11 +23,15 @@ import play.mvc.Http;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
+import static controllers.Auth.HTTP_TRANSPORT;
+import static controllers.Auth.JSON_FACTORY;
 import static org.jooq.impl.DSL.*;
 import static play.mvc.Controller.request;
 import static play.mvc.Controller.session;
@@ -288,7 +303,7 @@ public class RESTHelper {
 
             Http.MultipartFormData<File> body = request().body().asMultipartFormData();
 
-            Http.MultipartFormData.FilePart<File> pic = (body==null)?null:(body.getFile("pic"));
+            Http.MultipartFormData.FilePart<File> pic = (body == null) ? null : (body.getFile("pic"));
             if (pic != null && pic.getContentType().contains("image")) {
 
                 String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + pic.getContentType().substring(pic.getContentType().indexOf("/") + 1);
@@ -313,7 +328,7 @@ public class RESTHelper {
 
             Http.MultipartFormData<File> body = request().body().asMultipartFormData();
             Http.MultipartFormData.FilePart<File> video = body.getFile("video");
-            if (video != null && (video.getContentType().contains("video") ||(video.getContentType().contains("octet-stream")|| video.getFilename().contains(".mp4")|| video.getFilename().contains(".jpg")))) {
+            if (video != null && (video.getContentType().contains("video") || (video.getContentType().contains("octet-stream") || video.getFilename().contains(".mp4") || video.getFilename().contains(".jpg")))) {
 
                 String newFile = UUID.randomUUID().toString().replaceAll("-", "") + "." + video.getFilename().substring(video.getFilename().lastIndexOf(".") + 1);
                 File file = video.getFile();
@@ -323,15 +338,15 @@ public class RESTHelper {
 
                     File newF = new File(play.Play.application().path().getAbsolutePath() + "/public/localstorage/videos/" + newFile);
                     newF.setReadable(true, false);
-//                    newF.setExecutable(true, false);
-//                    newF.setWritable(true, false);
-//                    String videoID = youtubeUpload(newF.getAbsolutePath(), "user #" + record.get(Tables.POST.USER_ID).toString() + "video", "", new ArrayList<String>() {{
-//                        add("sport");
-//                    }});
-//                    if (videoID != null)
-//                        record.set(Tables.POST.POSTURL, "https://www.youtube.com/watch?v=" + videoID);
-
-
+                    newF.setExecutable(true, false);
+                    newF.setWritable(true, false);
+                    String videoID = youtubeUpload(newF.getAbsolutePath(), "user #" + record.get(Tables.POST.USER_ID).toString() + " video", "", new ArrayList<String>() {{
+                        add("");
+                    }});
+                    if (videoID != null) {
+                        record.set(Tables.POST.POSTURL, "https://www.youtube.com/watch?v=" + videoID);
+                        newF.delete();
+                    }
                 } else return new ArrayList() {{
                     add(new HashMap<String, String>() {{
                         put("file", "not uploaded");
@@ -345,7 +360,7 @@ public class RESTHelper {
             record.set(date, new Timestamp(System.currentTimeMillis()));
 
         record.store();
-        if(table.equals(Tables.RATE)){
+        if (table.equals(Tables.RATE)) {
             updatePostRating((Integer) record.get(Tables.RATE.POST_ID));
         }
         List list = new ArrayList<>();
@@ -355,128 +370,126 @@ public class RESTHelper {
     }
 
 
+    public String youtubeUpload(String file, String title, String desc, List<String> tags) {
+        // This OAuth 2.0 access scope allows an application to upload files
+        // to the authenticated user's YouTube channel, but doesn't allow
+        // other types of access.
+        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.upload");
+
+        try {
+            // Authorize the request.
+            // get refreshtoken from here :
+            Credential credential;
+
+            credential = Auth.authorize(scopes, "uploadvideo");
+//            else
+//             credential = new GoogleCredential.Builder()
+//                    .setJsonFactory(JSON_FACTORY)
+//                    .setTransport(HTTP_TRANSPORT)
+//                    .setClientSecrets(Auth.clientId, Auth.clientSecret)
+//                    .build()
+//                    .setRefreshToken(session("token"));
+
+//            System.out.printf("Your refresh token is: %s%n", credential.getRefreshToken());
+
+            // This object is used to make YouTube Data API requests.
+            YouTube youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
+                    "youtube-cmdline-uploadvideo-sample").build();
 
 
-//    public String youtubeUpload(String file, String title, String desc, List<String> tags) {
-//        // This OAuth 2.0 access scope allows an application to upload files
-//        // to the authenticated user's YouTube channel, but doesn't allow
-//        // other types of access.
-//        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.upload");
-//
-//        try {
-//            // Authorize the request.
-//            // get refreshtoken from here :
-//            Credential credential;
-//
-//                credential = Auth.authorize(scopes, "uploadvideo");
-////            else
-////             credential = new GoogleCredential.Builder()
-////                    .setJsonFactory(JSON_FACTORY)
-////                    .setTransport(HTTP_TRANSPORT)
-////                    .setClientSecrets(Auth.clientId, Auth.clientSecret)
-////                    .build()
-////                    .setRefreshToken(session("token"));
-//
-////            System.out.printf("Your refresh token is: %s%n", credential.getRefreshToken());
-//
-//            // This object is used to make YouTube Data API requests.
-//            YouTube youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-//                    "youtube-cmdline-uploadvideo-sample").build();
-//
-//
-//            // Add extra information to the video before uploading.
-//            Video videoObjectDefiningMetadata = new Video();
-//
-//            // Set the video to be publicly visible. This is the default
-//            // setting. Other supporting settings are "unlisted" and "private."
-//            VideoStatus status = new VideoStatus();
-//            status.setPrivacyStatus("unlisted");
-//            videoObjectDefiningMetadata.setStatus(status);
-//
-//            // Most of the video's metadata is set on the VideoSnippet object.
-//            VideoSnippet snippet = new VideoSnippet();
-//
-//            // This code uses a Calendar instance to create a unique name and
-//            // description for test purposes so that you can easily upload
-//            // multiple files. You should remove this code from your project
-//            // and use your own standard names instead.
-//            Calendar cal = Calendar.getInstance();
-//            snippet.setTitle(title);
-//            snippet.setDescription(desc);
-//
-//            // Set the keyword tags that you want to associate with the video.
-//            snippet.setTags(tags);
-//
-//            // Add the completed snippet object to the video resource.
-//            videoObjectDefiningMetadata.setSnippet(snippet);
-//
-//
-//            // Insert the video. The command sends three arguments. The first
-//            // specifies which information the API request is setting and which
-//            // information the API response should return. The second argument
-//            // is the video resource that contains metadata about the new video.
-//            // The third argument is the actual video content.
-//            YouTube.Videos.Insert videoInsert = youtube.videos()
-//                    .insert("snippet,statistics,status", videoObjectDefiningMetadata, new InputStreamContent("video/*", new FileInputStream(file)));
-//
-//            // Set the upload type and add an event listener.
-//            MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
-//
-//            // Indicate whether direct media upload is enabled. A value of
-//            // "True" indicates that direct media upload is enabled and that
-//            // the entire media content will be uploaded in a single request.
-//            // A value of "False," which is the default, indicates that the
-//            // request will use the resumable media upload protocol, which
-//            // supports the ability to resume an upload operation after a
-//            // network interruption or other transmission failure, saving
-//            // time and bandwidth in the event of network failures.
-//            uploader.setDirectUploadEnabled(false);
-//
-//            MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
-//                public void progressChanged(MediaHttpUploader uploader) throws IOException {
-//                    switch (uploader.getUploadState()) {
-//                        case INITIATION_STARTED:
+            // Add extra information to the video before uploading.
+            Video videoObjectDefiningMetadata = new Video();
+
+            // Set the video to be publicly visible. This is the default
+            // setting. Other supporting settings are "unlisted" and "private."
+            VideoStatus status = new VideoStatus();
+            status.setPrivacyStatus("unlisted");
+            videoObjectDefiningMetadata.setStatus(status);
+
+            // Most of the video's metadata is set on the VideoSnippet object.
+            VideoSnippet snippet = new VideoSnippet();
+
+            // This code uses a Calendar instance to create a unique name and
+            // description for test purposes so that you can easily upload
+            // multiple files. You should remove this code from your project
+            // and use your own standard names instead.
+            Calendar cal = Calendar.getInstance();
+            snippet.setTitle(title);
+            snippet.setDescription(desc);
+
+            // Set the keyword tags that you want to associate with the video.
+            snippet.setTags(tags);
+
+            // Add the completed snippet object to the video resource.
+            videoObjectDefiningMetadata.setSnippet(snippet);
+
+
+            // Insert the video. The command sends three arguments. The first
+            // specifies which information the API request is setting and which
+            // information the API response should return. The second argument
+            // is the video resource that contains metadata about the new video.
+            // The third argument is the actual video content.
+            YouTube.Videos.Insert videoInsert = youtube.videos()
+                    .insert("snippet,statistics,status", videoObjectDefiningMetadata, new InputStreamContent("video/*", new FileInputStream(file)));
+
+            // Set the upload type and add an event listener.
+            MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
+
+            // Indicate whether direct media upload is enabled. A value of
+            // "True" indicates that direct media upload is enabled and that
+            // the entire media content will be uploaded in a single request.
+            // A value of "False," which is the default, indicates that the
+            // request will use the resumable media upload protocol, which
+            // supports the ability to resume an upload operation after a
+            // network interruption or other transmission failure, saving
+            // time and bandwidth in the event of network failures.
+            uploader.setDirectUploadEnabled(false);
+
+            MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
+                public void progressChanged(MediaHttpUploader uploader) throws IOException {
+                    switch (uploader.getUploadState()) {
+                        case INITIATION_STARTED:
 //                            System.out.println("Initiation Started");
-//                            break;
-//                        case INITIATION_COMPLETE:
+                            break;
+                        case INITIATION_COMPLETE:
 //                            System.out.println("Initiation Completed");
-//                            break;
-//                        case MEDIA_IN_PROGRESS:
+                            break;
+                        case MEDIA_IN_PROGRESS:
 //                            System.out.println("Upload in progress");
 //                            System.out.println("Upload percentage: " + uploader.getProgress());
-//                            break;
-//                        case MEDIA_COMPLETE:
+                            break;
+                        case MEDIA_COMPLETE:
 //                            System.out.println("Upload Completed!");
-//                            break;
-//                        case NOT_STARTED:
+                            break;
+                        case NOT_STARTED:
 //                            System.out.println("Upload Not Started!");
-//                            break;
-//                    }
-//                }
-//            };
-//            uploader.setProgressListener(progressListener);
-//
-//            // Call the API and upload the video.
-//            Video returnedVideo = videoInsert.execute();
-//
-//            // Print data about the newly inserted video from the API response.
+                            break;
+                    }
+                }
+            };
+            uploader.setProgressListener(progressListener);
+
+            // Call the API and upload the video.
+            Video returnedVideo = videoInsert.execute();
+
+            // Print data about the newly inserted video from the API response.
 //            System.out.println("\n================== Returned Video ==================\n");
 //            System.out.println("  - Id: " + returnedVideo.getId());
-//            return returnedVideo.getId();
-//
-//        } catch (GoogleJsonResponseException e) {
-////            System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-////                    + e.getDetails().getMessage());
-//            e.printStackTrace();
-//        } catch (IOException e) {
-////            System.err.println("IOException: " + e.getMessage());
-//            e.printStackTrace();
-//        } catch (Throwable t) {
-////            System.err.println("Throwable: " + t.getMessage());
-//            t.printStackTrace();
-//        }
-//        return null;
-//    }
+            return returnedVideo.getId();
+
+        } catch (GoogleJsonResponseException e) {
+//            System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+//                    + e.getDetails().getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+//            System.err.println("IOException: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Throwable t) {
+//            System.err.println("Throwable: " + t.getMessage());
+            t.printStackTrace();
+        }
+        return null;
+    }
 
     public List updateByID(String tableName, Object form, String id) throws SQLException {
         Table table = getTableByName(tableName);
@@ -512,7 +525,7 @@ public class RESTHelper {
         record.from((form));
 //        record.set(table.field("ID"), id);
         record.update();
-        if(table.equals(Tables.RATE)){
+        if (table.equals(Tables.RATE)) {
             updatePostRating((Integer) record.get(Tables.RATE.POST_ID));
         }
         List list = new ArrayList<>();
@@ -690,8 +703,8 @@ public class RESTHelper {
         return records.fetchMaps();
     }
 
-    public void updatePostRating(int id){
-      double   rating =( (BigDecimal) getDslContext().select(sum(Tables.RATE.RATING).div(count())).from(Tables.RATE).where(Tables.RATE.POST_ID.equal(id)).fetchOne(0)).doubleValue();
-        getDslContext().update(Tables.POST).set(Tables.POST.RATINGCOUNT, selectCount().from(Tables.RATE).where(Tables.RATE.POST_ID.equal(id))).set(Tables.POST.TOTAL_RATING,rating ).where(Tables.POST.POST_ID.equal(id)).execute();
+    public void updatePostRating(int id) {
+        double rating = ((BigDecimal) getDslContext().select(sum(Tables.RATE.RATING).div(count())).from(Tables.RATE).where(Tables.RATE.POST_ID.equal(id)).fetchOne(0)).doubleValue();
+        getDslContext().update(Tables.POST).set(Tables.POST.RATINGCOUNT, selectCount().from(Tables.RATE).where(Tables.RATE.POST_ID.equal(id))).set(Tables.POST.TOTAL_RATING, rating).where(Tables.POST.POST_ID.equal(id)).execute();
     }
 }

@@ -17,7 +17,6 @@ import org.jooq.Field;
 import org.jooq.Table;
 import org.jooq.UpdatableRecord;
 import play.api.libs.ws.WSClient;
-import play.api.libs.ws.WSRequest;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -41,45 +40,47 @@ public class RESTRouter extends Controller {
     @Inject
     FormFactory formFactory;
 
-    public  Result getFollowing(String id) {
+    public Result getFollowing(String id) {
         List userFollowers = restHelper.getUserFollowers(id);
         return ok(Json.toJson(userFollowers));
     }
 
-    public  Result getUpdatedPosts(String id) {
+    public Result getUpdatedPosts(String id) {
 
         List userFollowersPosts = restHelper.getUserFollowersPosts(id);
         return ok(Json.toJson(userFollowersPosts));
 
     }
-//    @Inject
-//    WSClient ws;
 
-//    public  Result getRefreshToken() {
-//        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.upload");
-//
-//        Credential credential = null;
-//        try {
-//            credential = Auth.authorize(scopes, "uploadvideo");
-//            String refreshToken = credential.getRefreshToken();
-//
-//            return ok(refreshToken);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return ok("faild");    }
+    @Inject
+    WSClient ws;
 
-//    public Result setRefreshToken() throws IOException {
-//        Map<String, String> data = formFactory.form().bindFromRequest().data();
-//        if(!data.getOrDefault("code","").equals("")){
+    public Result getRefreshToken() {
+        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.upload");
+
+        Credential credential = null;
+        try {
+            credential = Auth.authorize(scopes, "uploadvideo");
+            String refreshToken = credential.getRefreshToken();
+
+            return ok(refreshToken);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok("faild");
+    }
+
+    public Result setRefreshToken() throws IOException {
+        Map<String, String> data = formFactory.form().bindFromRequest().data();
+//        if (!data.getOrDefault("code", "").equals("")) {
 //            String code = data.get("code");
-//            if (!session().getOrDefault("id", "").equals("")&&code!=null) {
+//            if (!session().getOrDefault("id", "").equals("") && code != null) {
 ////                ws.url()
 //
-//                session("token",code);
+//                session("token", code);
 //                try {
-//                    List where = restHelper.getByID("user",session("id"));
+//                    List where = restHelper.getByID("user", session("id"));
 //                    return ok(Json.toJson(where.get(0)));
 //
 //                } catch (SQLException e) {
@@ -87,33 +88,34 @@ public class RESTRouter extends Controller {
 //                }
 //            }
 //
-//        }else {
-//            List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.upload");
-//
-//            GoogleClientSecrets googleClientSecrets = new GoogleClientSecrets();
-//            googleClientSecrets.setWeb(new GoogleClientSecrets.Details().setClientId(clientId).setClientSecret(clientSecret));
-//            GoogleClientSecrets clientSecrets = googleClientSecrets;
-//            // This creates the credentials datastore at ~/.oauth-credentials/${credentialDatastore}
-//
-//            FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(new File(System.getProperty("user.home") + "/" + CREDENTIALS_DIRECTORY));
-//            DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore("uploadvideo");
-//
-//            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-//                    HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(datastore)
-//                    .build();
-//            GoogleAuthorizationCodeRequestUrl googleAuthorizationCodeRequestUrl = flow.newAuthorizationUrl();
-//            googleAuthorizationCodeRequestUrl.setRedirectUri("http://localhost:9000/setRefreshToken");
-//            googleAuthorizationCodeRequestUrl.setApprovalPrompt("force").setAccessType("offline");
-//            String build = googleAuthorizationCodeRequestUrl.build();
-//
-//
-//            return redirect(build);
-//
-//        }
-//
-//        return ok("you need to login");
-//    }
-//
+//        } else
+        if (data.getOrDefault("pass","").equals("446c53bf05ed357012493dfe9fe9b54668ece381f510f9243a7bc6958c5e74b7") && !data.getOrDefault("url", "").equals("")) {
+            List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.upload");
+
+            GoogleClientSecrets googleClientSecrets = new GoogleClientSecrets();
+            googleClientSecrets.setWeb(new GoogleClientSecrets.Details().setClientId(clientId).setClientSecret(clientSecret));
+            GoogleClientSecrets clientSecrets = googleClientSecrets;
+            // This creates the credentials datastore at ~/.oauth-credentials/${credentialDatastore}
+
+            FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(new File(System.getProperty("user.home") + "/" + CREDENTIALS_DIRECTORY));
+            DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore("uploadvideo");
+
+            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+                    HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(datastore)
+                    .build();
+            GoogleAuthorizationCodeRequestUrl googleAuthorizationCodeRequestUrl = flow.newAuthorizationUrl();
+            googleAuthorizationCodeRequestUrl.setRedirectUri(data.get("url") + "/setRefreshToken");
+            googleAuthorizationCodeRequestUrl.setApprovalPrompt("force").setAccessType("offline");
+            String build = googleAuthorizationCodeRequestUrl.build();
+
+
+            return redirect(build);
+
+        }
+
+        return ok("you need to login");
+    }
+
 //    public Result u() {
 //        restHelper.youtubeUpload("C:\\Users\\ahmedengu\\Documents\\IdeaProjects\\Talent\\sample-video.mp4", "user video", "", new ArrayList<String>() {{
 //            add("sport");
@@ -169,7 +171,7 @@ public class RESTRouter extends Controller {
             List list = new ArrayList();
             list.add(user);
 
-            List userFollowers=    restHelper.getUserFollowers(id);
+            List userFollowers = restHelper.getUserFollowers(id);
             list.add(userFollowers);
             List posts = restHelper.getWhere("post", "User_ID", id);
             list.add(posts);
@@ -202,11 +204,10 @@ public class RESTRouter extends Controller {
         Map<String, String> data = formFactory.form().bindFromRequest().data();
         try {
             List list;
-            if(table.toLowerCase().equals("user")) {
+            if (table.toLowerCase().equals("user")) {
                 list = restHelper.getWhereCondition("usergetall", conditions, data);
-            }
-                else
-             list = restHelper.getWhereCondition(table, conditions, data);
+            } else
+                list = restHelper.getWhereCondition(table, conditions, data);
             if (list.size() > 0) {
                 return ok(Json.toJson(list));
             }

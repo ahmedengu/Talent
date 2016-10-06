@@ -9,7 +9,6 @@ import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -17,22 +16,17 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
-import play.api.libs.ws.WSRequest;
-import play.libs.ws.WSClient;
 
-import javax.inject.Inject;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.List;
 
 /**
  * Shared class used by every sample. Contains methods for authorizing a user and caching credentials.
  */
-public class Auth {
-//    public static String refreshToken = null;
-    public static String clientId = "";
-    public static String clientSecret = "";
+public  class Auth {
+   public static String refreshToken = null;
+    public static String clientId = "295298618538-3efprfhttm64j0ra52femog9fp55tsr6.apps.googleusercontent.com";
+    public static String clientSecret = "YyZxIaq6fRBpFEVUVj0Pf1Tx";
 
 
     /**

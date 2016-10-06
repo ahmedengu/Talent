@@ -1,6 +1,4 @@
-import com.typesafe.sbt.packager.Keys.dist
-import com.github.sbtliquibase.SbtLiquibase
-import com.github.sbtliquibase.Import._
+
 
 name := "Talent"
 
@@ -30,13 +28,20 @@ libraryDependencies ++= Seq(
   "com.fasterxml.uuid" % "java-uuid-generator" % "3.1.3",
   "com.typesafe.play" %% "play-mailer" % "5.0.0-M1",
   "org.mindrot" % "jbcrypt" % "0.3m",
-  "com.google.api-client" % "google-api-client" % "1.22.0",
-  "com.google.apis" % "google-api-services-youtube" % "v3-rev175-1.22.0",
-  "com.google.api.client" % "google-api-client-auth" % "1.2.3-alpha",
-  "com.google.api.client" % "google-api-client-googleapis-auth" % "1.2.3-alpha",
-  "com.google.api.client" % "google-api-client-auth-oauth" % "1.2.3-alpha",
-  "com.google.auth" % "google-auth-library-oauth2-http" % "0.4.0",
-  "com.google.gdata" % "core" % "1.47.1"
+  "com.google.apis" % "google-api-services-youtube" % "v3-rev107-1.18.0-rc",
+  "com.google.apis" % "google-api-services-youtubeAnalytics" % "v1-rev24-1.17.0-rc",
+  "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.4",
+  "com.google.http-client" % "google-http-client-jackson2" % "1.18.0-rc",
+  "com.google.oauth-client" % "google-oauth-client-jetty" % "1.18.0-rc",
+  "com.google.collections" % "google-collections" % "1.0"
+
+//  "com.google.api-client" % "google-api-client" % "1.22.0",
+
+//  "com.google.api.client" % "google-api-client-auth" % "1.2.3-alpha",
+//  "com.google.api.client" % "google-api-client-googleapis-auth" % "1.2.3-alpha",
+//  "com.google.api.client" % "google-api-client-auth-oauth" % "1.2.3-alpha",
+//  "com.google.auth" % "google-auth-library-oauth2-http" % "0.4.0",
+//  "com.google.gdata" % "core" % "1.47.1"
 )
 
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.31" % "jooq"

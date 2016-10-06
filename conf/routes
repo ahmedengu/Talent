@@ -9,7 +9,8 @@ GET           /assets/*file                          controllers.Assets.at(path=
 
 GET           /                                      controllers.RESTRouter.indexHome()
 #GET           /getRefreshToken                                      controllers.RESTRouter.getRefreshToken()
-#GET           /setRefreshToken                                      controllers.RESTRouter.setRefreshToken()
+GET           /setRefreshToken                                      controllers.RESTRouter.setRefreshToken()
+#GET           /u                                      controllers.RESTRouter.u()
 
 POST          /api/v1/:table/where/*condition        controllers.RESTRouter.getWhereWithCondition( table  ,condition)
 POST          /api/v1/login                          controllers.RESTRouter.login()

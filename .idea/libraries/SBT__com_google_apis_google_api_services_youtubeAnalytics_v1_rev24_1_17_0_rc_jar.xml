@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: com.google.apis:google-api-services-youtubeAnalytics:v1-rev24-1.17.0-rc:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.apis/google-api-services-youtubeAnalytics/jars/google-api-services-youtubeAnalytics-v1-rev24-1.17.0-rc.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.apis/google-api-services-youtubeAnalytics/srcs/google-api-services-youtubeAnalytics-v1-rev24-1.17.0-rc-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
